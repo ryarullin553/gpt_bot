@@ -1,3 +1,4 @@
 g4f
 aiogram
 python-dotenv
+asyncpg
