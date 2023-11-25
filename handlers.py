@@ -1,5 +1,5 @@
 from aiogram import Router, F, types
-from aiogram.enums import ParseMode
+from aiogram.enums import ParseMode, ChatAction
 from aiogram.filters import Command
 
 from constants import BotMessage, Query
@@ -35,7 +35,13 @@ async def send_promt(message: types.Message) -> None:
     )
     await db.disconnect()
 
-    await message.answer(
-        text=response,
-        parse_mode=ParseMode.MARKDOWN
-    )
+    await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+    try:
+        await message.answer(
+            text=response,
+            parse_mode=ParseMode.MARKDOWN
+        )
+    except Exception:
+        await message.answer(
+            text=response
+        )
