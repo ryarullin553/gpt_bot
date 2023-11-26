@@ -1,20 +1,25 @@
 import asyncio
-import os
 
 from aiogram import Bot, Dispatcher
-from dotenv import load_dotenv
-import handlers
+from aiogram.enums import ParseMode
 
-load_dotenv()
+import handlers
+from config import BOT_TOKEN
 
 
 async def main() -> None:
-    bot = Bot(token=os.getenv('BOT_TOKEN'))
+    bot = Bot(
+        token=BOT_TOKEN,
+        parse_mode=ParseMode.MARKDOWN
+    )
     dp = Dispatcher()
     dp.include_routers(handlers.router)
-
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
 
 if __name__ == '__main__':
     asyncio.run(main())
