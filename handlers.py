@@ -7,7 +7,6 @@ from database import Database
 from gpt import get_answer
 
 router = Router()
-db = Database()
 
 
 @router.message(Command('start'))
@@ -21,7 +20,7 @@ async def start(message: types.Message) -> None:
 
 
 @router.message(F.text)
-async def send_promt(message: types.Message) -> None:
+async def send_promt(message: types.Message, db: Database) -> None:
     """Отправка промта с последующим получением ответа от GPT"""
     await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     tg_id: int = message.from_user.id
@@ -35,8 +34,7 @@ async def send_promt(message: types.Message) -> None:
     except Exception:
         await message.answer(text=BotMessage.PARSE_ERROR)
 
-    await db.connect()
     await db.execute(
         Query.INSERT_MESSAGE, tg_id, username, full_name, text, response
     )
-    await db.disconnect()
+
