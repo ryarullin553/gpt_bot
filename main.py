@@ -18,10 +18,12 @@ async def main() -> None:
     dp.include_routers(handlers.router)
     await bot.delete_webhook(drop_pending_updates=True)
 
+    PLAYERS = []
+
     db = Database()
     await db.connect()
     try:
-        await dp.start_polling(bot, db=db)
+        await dp.start_polling(bot, db=db, players=PLAYERS)
     finally:
         await bot.session.close()
         await db.disconnect()
