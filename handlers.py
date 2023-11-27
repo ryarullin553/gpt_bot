@@ -61,10 +61,10 @@ async def send_promt(message: types.Message, db: Database) -> None:
     text: str = message.text
     response: str = await get_answer(message.text)
 
-    try:
-        await message.answer(text=response)
-    except Exception:
-        await message.answer(text=BotMessage.PARSE_ERROR)
+    #try:
+    await message.answer(text=response)
+    # except Exception:
+    #     await message.answer(text=BotMessage.PARSE_ERROR)
 
     await db.execute(
         Query.INSERT_MESSAGE, tg_id, username, full_name, text, response

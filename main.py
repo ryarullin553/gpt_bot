@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
@@ -10,6 +11,7 @@ from database import Database
 
 
 async def main() -> None:
+    logging.basicConfig(level=logging.INFO)
     bot = Bot(
         token=BOT_TOKEN,
         parse_mode=ParseMode.MARKDOWN
