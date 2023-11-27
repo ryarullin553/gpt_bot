@@ -22,6 +22,10 @@ class Query:
         INSERT INTO MESSAGES (TG_ID, USERNAME, FULL_NAME, TEXT, RESPONSE)
         VALUES ($1, $2, $3, $4, $5)
     '''
+    INSERT_SANTA = '''
+        INSERT INTO SANTA (PLAYER, EMPLOYEE, TEXT)
+        VALUES ($1, $2, $3)
+    '''
 
 
 OVA_EMPLOYEES = [

@@ -11,7 +11,7 @@ from database import Database
 
 
 async def main() -> None:
-    logging.basicConfig(level=logging.INFO)
+    #logging.basicConfig(level=logging.INFO)
     bot = Bot(
         token=BOT_TOKEN,
         parse_mode=ParseMode.MARKDOWN

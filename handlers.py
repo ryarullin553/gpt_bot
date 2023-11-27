@@ -61,10 +61,10 @@ async def send_promt(message: types.Message, db: Database) -> None:
     text: str = message.text
     response: str = await get_answer(message.text)
 
-    #try:
-    await message.answer(text=response)
-    # except Exception:
-    #     await message.answer(text=BotMessage.PARSE_ERROR)
+    try:
+        await message.answer(text=response)
+    except Exception:
+        await message.answer(text=BotMessage.PARSE_ERROR)
 
     await db.execute(
         Query.INSERT_MESSAGE, tg_id, username, full_name, text, response
@@ -86,7 +86,8 @@ async def secret_santa(callback: types.CallbackQuery,
 
 
 @router.message(Gen.santa_gen)
-async def send_random_value(message: types.Message, players: list[dict], bot):
+async def send_random_value(message: types.Message, players: list[dict],
+                            bot, db: Database):
     """Регистрация участников игры"""
     username: str = message.from_user.username
     full_name: str = message.from_user.full_name
@@ -120,6 +121,12 @@ async def send_random_value(message: types.Message, players: list[dict], bot):
                             vk[0]['text']
                         )
                     )
+                    await db.execute(
+                        Query.INSERT_SANTA,
+                        player['username'],
+                        vk[0]['username'],
+                        vk[0]['text']
+                    )
                 else:
                     employee = employees.pop(rand_int)
                     player['to_user'] = employee['username']
@@ -130,6 +137,12 @@ async def send_random_value(message: types.Message, players: list[dict], bot):
                             employee['fullname'],
                             employee['text']
                         )
+                    )
+                    await db.execute(
+                        Query.INSERT_SANTA,
+                        player['username'],
+                        employee['username'],
+                        employee['text']
                     )
     else:
         await message.answer(text=BotMessage.OVA_ERROR)
