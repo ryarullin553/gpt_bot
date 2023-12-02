@@ -6,12 +6,10 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 import handlers
-from config import BOT_TOKEN
-from database import Database
+from config import BOT_TOKEN, DEBUG
 
 
 async def main() -> None:
-    #logging.basicConfig(level=logging.INFO)
     bot = Bot(
         token=BOT_TOKEN,
         parse_mode=ParseMode.MARKDOWN
@@ -20,15 +18,13 @@ async def main() -> None:
     dp.include_routers(handlers.router)
     await bot.delete_webhook(drop_pending_updates=True)
 
-    PLAYERS = []
+    if DEBUG:
+        logging.basicConfig(level=logging.INFO)
 
-    db = Database()
-    await db.connect()
     try:
-        await dp.start_polling(bot, db=db, players=PLAYERS)
+        await dp.start_polling(bot)
     finally:
         await bot.session.close()
-        await db.disconnect()
 
 if __name__ == '__main__':
     asyncio.run(main())
