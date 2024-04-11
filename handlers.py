@@ -23,8 +23,8 @@ async def send_promt(message: types.Message) -> None:
     await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     tg_id: int = message.from_user.id
     if tg_id == int(MY_ID):
-        response: str = await get_answer(message.text)
         try:
+            response: str = await get_answer(message.text)
             await message.answer(text=response)
         except Exception:
             await message.answer(text=traceback.format_exc())
